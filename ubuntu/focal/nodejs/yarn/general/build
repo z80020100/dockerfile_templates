@@ -1,0 +1,4 @@
+#!/bin/sh
+
+docker build -t ubuntu_focal_nodejs_yarn_general . \
+    # --no-cache

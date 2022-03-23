@@ -1,0 +1,11 @@
+#!/bin/sh
+
+WORKDIR="/app"
+
+docker run \
+    -it \
+    --rm \
+    --network="host" \
+    -v $PWD:$WORKDIR \
+    ubuntu_focal_nodejs_yarn_general \
+    /bin/bash
