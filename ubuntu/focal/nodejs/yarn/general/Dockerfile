@@ -33,5 +33,5 @@ RUN n -V
 RUN n lts
 
 # Copy source code and installs all the dependencies defined in a package.json file
-# COPY . $WORKDIR/
-# RUN cd $WORKDIR && yarn install
+COPY . $WORKDIR/
+RUN cd $WORKDIR && yarn install
