@@ -1,8 +1,31 @@
 #!/bin/sh
 
-docker run \
-    -it \
-    --rm \
-    --network="host" \
-    ubuntu_focal_nodejs_yarn_general \
-    /bin/bash
+REPOSITORY="ubuntu_focal_nodejs_yarn_general"
+PLATFORM_OS="linux"
+PLATFORM_ARCH="${1:-}"
+INTERACTIVE_ARG="-i"
+TTY_ARG="-t"
+RM_ARG="--rm"
+NETWORK_ARG="--network=host"
+CONTAINER_EXEC_CMD="/bin/bash"
+
+if [ "$PLATFORM_ARCH" = "" ]; then
+    PLATFORM_ARG=""
+    IMAGE="$REPOSITORY"
+else
+    PLATFORM_ARG="--platform $PLATFORM_OS/$PLATFORM_ARCH"
+    IMAGE="$REPOSITORY:$PLATFORM_ARCH"
+fi
+
+DOCKER_RUN_CMD="\
+    docker run \
+    $INTERACTIVE_ARG \
+    $TTY_ARG \
+    $RM_ARG \
+    $PLATFORM_ARG \
+    $NETWORK_ARG \
+    $IMAGE \
+    $CONTAINER_EXEC_CMD"
+
+echo $DOCKER_RUN_CMD
+$DOCKER_RUN_CMD
