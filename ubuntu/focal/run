@@ -8,6 +8,7 @@ TTY_ARG="-t"
 RM_ARG="--rm"
 NETWORK_ARG="--network=host"
 CONTAINER_EXEC_CMD="/bin/bash"
+MOUNT_ARG="-v $HOME:/home/docker"
 
 if [ "$PLATFORM_ARCH" = "" ]; then
     PLATFORM_ARG=""
@@ -24,6 +25,7 @@ DOCKER_RUN_CMD="\
     $RM_ARG \
     $PLATFORM_ARG \
     $NETWORK_ARG \
+    $MOUNT_ARG \
     $IMAGE \
     $CONTAINER_EXEC_CMD"
 
