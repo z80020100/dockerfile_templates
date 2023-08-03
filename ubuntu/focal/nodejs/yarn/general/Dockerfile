@@ -8,7 +8,9 @@ ENV CONTAINER_TIMEZONE="Asia/Taipei"
 RUN ln -snf /usr/share/zoneinfo/$CONTAINER_TIMEZONE /etc/localtime && echo $CONTAINER_TIMEZONE > /etc/timezone
 
 # Install required packages
-RUN apt update && apt install curl gnupg wget locales tzdata autoconf build-essential -y
+RUN apt update && apt install -y autoconf bash-completion build-essential curl git gnupg locales sudo tzdata wget && rm -rf /var/lib/apt/lists/*
+# https://docs.docker.com/develop/develop-images/dockerfile_best-practices/
+# Official Debian and Ubuntu images automatically run apt-get clean, so explicit invocation is not required.
 
 # Set locale
 RUN locale-gen en_US en_US.UTF-8
