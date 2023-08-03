@@ -8,7 +8,7 @@ ENV CONTAINER_TIMEZONE="Asia/Taipei"
 RUN ln -snf /usr/share/zoneinfo/$CONTAINER_TIMEZONE /etc/localtime && echo $CONTAINER_TIMEZONE > /etc/timezone
 
 # Install required packages
-RUN apt update && apt install curl gnupg wget locales tzdata autoconf build-essential -y
+RUN apt update && apt install -y autoconf build-essential curl gnupg locales tzdata wget && rm -rf /var/lib/apt/lists/*
 
 # Set locale
 RUN locale-gen en_US en_US.UTF-8
