@@ -1,6 +1,8 @@
 #!/bin/sh
 
-REPOSITORY="ubuntu_focal"
+ROOT_DIR="dockerfile_templates"
+PWD=$(pwd)
+REPOSITORY=${PWD#*"$ROOT_DIR/"}
 PLATFORM_OS="linux"
 PLATFORM_ARCH="${1:-}"
 ENABLE_CACHE="${2:-0}"
