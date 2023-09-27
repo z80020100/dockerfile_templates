@@ -5,6 +5,7 @@ PWD=$(pwd)
 REPOSITORY=${PWD#*"$ROOT_DIR/"}
 PLATFORM_OS="linux"
 PLATFORM_ARCH="${1:-}"
+PRIVILEGED_ARG="--privileged"
 INTERACTIVE_ARG="-i"
 TTY_ARG="-t"
 RM_ARG="--rm"
@@ -32,6 +33,7 @@ fi
 
 DOCKER_RUN_CMD="\
     docker run \
+    $PRIVILEGED_ARG \
     $INTERACTIVE_ARG \
     $TTY_ARG \
     $RM_ARG \
