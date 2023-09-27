@@ -12,6 +12,16 @@ NETWORK_ARG="--network=host"
 CONTAINER_EXEC_CMD="/bin/bash"
 MOUNT_ARG="-v $HOME:/home/docker"
 
+# Enable X11 forwarding
+if [ "$DISPLAY" != "" ]; then
+    XSOCK=/tmp/.X11-unix
+    XAUTH=/tmp/.docker.xauth
+    touch $XAUTH
+    xauth nlist $DISPLAY | sed -e 's/^..../ffff/' | xauth -f $XAUTH nmerge -
+    XAUTH_ARG="-v $XSOCK:$XSOCK -v $XAUTH:$XAUTH -e XAUTHORITY=$XAUTH"
+    DISPLAY_ARG="-e DISPLAY=$DISPLAY"
+fi
+
 if [ "$PLATFORM_ARCH" = "" ]; then
     PLATFORM_ARG=""
     IMAGE="$REPOSITORY"
@@ -28,6 +38,8 @@ DOCKER_RUN_CMD="\
     $PLATFORM_ARG \
     $NETWORK_ARG \
     $MOUNT_ARG \
+    $XAUTH_ARG \
+    $DISPLAY_ARG \
     $IMAGE \
     $CONTAINER_EXEC_CMD"
 
