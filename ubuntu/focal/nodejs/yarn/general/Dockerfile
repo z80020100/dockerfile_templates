@@ -50,4 +50,5 @@ RUN cd $WORKSPACE && yarn install
 
 # Set environment
 WORKDIR $WORKSPACE
+RUN chown -R $USERNAME:$USERNAME $WORKSPACE
 USER $USERNAME
