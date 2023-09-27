@@ -1,14 +1,14 @@
-# https://code.visualstudio.com/remote/advancedcontainers/add-nonroot-user
 FROM ubuntu:20.04
 
 ARG USERNAME=docker
 ARG USER_UID=1000
 ARG USER_GID=$USER_UID
 ENV HOME="/home/$USERNAME"
+ENV WORKSPACE="/workspace"
 
 # Set timezone
-ENV CONTAINER_TIMEZONE="Asia/Tokyo"
-RUN ln -snf /usr/share/zoneinfo/$CONTAINER_TIMEZONE /etc/localtime && echo $CONTAINER_TIMEZONE >/etc/timezone
+ENV TZ="Asia/Taipei"
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ >/etc/timezone
 
 # Install required packages
 RUN apt update && apt install -y autoconf bash-completion build-essential curl git gnupg locales sudo tzdata wget && rm -rf /var/lib/apt/lists/*
@@ -21,10 +21,12 @@ RUN update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8
 ENV LANG=en_US.UTF-8
 
 # Create the user
+# https://code.visualstudio.com/remote/advancedcontainers/add-nonroot-user
 RUN groupadd --gid $USER_GID $USERNAME && useradd --uid $USER_UID --gid $USER_GID -m $USERNAME
 
 # Add sudo support
 RUN echo $USERNAME ALL=\(root\) NOPASSWD:ALL >/etc/sudoers.d/$USERNAME && chmod 0440 /etc/sudoers.d/$USERNAME
 
+# Set environment
 WORKDIR $HOME
 USER $USERNAME
