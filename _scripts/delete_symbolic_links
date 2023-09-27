@@ -1,0 +1,18 @@
+#!/bin/bash
+
+PWD=$(pwd)
+TARGET_SCRIPTS=(
+    "build"
+    "build_aarch64"
+    "build_x86_64"
+    "run"
+    "run_aarch64"
+    "run_x86_64"
+)
+
+for TARGET_SCRIPT in "${TARGET_SCRIPTS[@]}"; do
+    TARGET_SCRIPT_PATH_SYMLINK="$PWD/$TARGET_SCRIPT"
+    if [ -f "$TARGET_SCRIPT_PATH_SYMLINK" ]; then
+        rm "$TARGET_SCRIPT_PATH_SYMLINK"
+    fi
+done
