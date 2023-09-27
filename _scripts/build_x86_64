@@ -9,11 +9,11 @@ BINFMT_PATH="/proc/sys/fs/binfmt_misc/"
 PARALLELS_ROSETTA_REG_NAME="RosettaLinux"
 PARALLELS_ROSETTA_SUPPORT=$(ls $BINFMT_PATH | grep $PARALLELS_ROSETTA_REG_NAME)
 if [ -z "$PARALLELS_ROSETTA_SUPPORT" ]; then
-  echo "Using QEMU"
-  echo $ENABLE_EMULATOR_CMD
-  $ENABLE_EMULATOR_CMD
+    echo "Using QEMU"
+    echo $ENABLE_EMULATOR_CMD
+    $ENABLE_EMULATOR_CMD
 else
-  echo "Using Rosetta (Parallels)"
+    echo "Using Rosetta (Parallels)"
 fi
 
 echo $BUILD_SCRIPT_CMD
