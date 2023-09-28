@@ -1,5 +1,7 @@
 #!/bin/sh
 
+CONTAINER_USER="docker"
+
 ROOT_DIR="dockerfile_templates"
 PWD=$(pwd)
 REPOSITORY=${PWD#*"$ROOT_DIR/"}
@@ -12,7 +14,20 @@ TTY_ARG="-t"
 RM_ARG="--rm"
 NETWORK_ARG="--network=host"
 CONTAINER_EXEC_CMD="/bin/bash"
-MOUNT_ARG="-v $HOME:/home/docker"
+MOUNT_ARG="-v $HOME:/home/$CONTAINER_USER"
+
+# Mount devices arguments
+MOUNT_USB_ARG="-v /dev/bus/usb:/dev/bus/usb/"
+MOUNT_DEV_ARG="-v /dev:/dev"
+MOUNT_MEDIA_ARG="-v /media/$USER:/media/$CONTAINER_USER:slave"
+
+# Mount devices for NVIDIA SDK Manager argument
+USE_FOR_NVIDIA_SDK_MGR=${2:-false}
+if [ "$USE_FOR_NVIDIA_SDK_MGR" = true ]; then
+    FOR_NVIDIA_SDK_MGR_ARG="$MOUNT_USB_ARG $MOUNT_DEV_ARG $MOUNT_MEDIA_ARG"
+else
+    FOR_NVIDIA_SDK_MGR_ARG=""
+fi
 
 # Enable X11 forwarding
 if [ "$DISPLAY" != "" ]; then
@@ -44,6 +59,7 @@ DOCKER_RUN_CMD="\
     $MOUNT_ARG \
     $XAUTH_ARG \
     $DISPLAY_ARG \
+    $FOR_NVIDIA_SDK_MGR_ARG \
     $IMAGE \
     $CONTAINER_EXEC_CMD"
 
