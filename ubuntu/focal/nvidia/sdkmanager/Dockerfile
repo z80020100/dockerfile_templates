@@ -1,0 +1,45 @@
+FROM ubuntu:20.04
+
+ARG USERNAME=docker
+ARG USER_UID=1000
+ARG USER_GID=$USER_UID
+ENV HOME="/home/$USERNAME"
+ENV WORKSPACE="/workspace"
+
+# Set timezone
+ENV TZ="Asia/Taipei"
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ >/etc/timezone
+
+# Install required packages
+RUN apt update && apt install -y autoconf bash-completion build-essential curl git gnupg locales sudo tzdata wget && rm -rf /var/lib/apt/lists/*
+# https://docs.docker.com/develop/develop-images/dockerfile_best-practices/
+# Official Debian and Ubuntu images automatically run apt-get clean, so explicit invocation is not required.
+
+# Set locale
+RUN locale-gen en_US en_US.UTF-8
+RUN update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8
+ENV LANG=en_US.UTF-8
+
+# Create the user
+# https://code.visualstudio.com/remote/advancedcontainers/add-nonroot-user
+RUN groupadd --gid $USER_GID $USERNAME && useradd --uid $USER_UID --gid $USER_GID -m $USERNAME
+
+# Add sudo support
+RUN echo $USERNAME ALL=\(root\) NOPASSWD:ALL >/etc/sudoers.d/$USERNAME && chmod 0440 /etc/sudoers.d/$USERNAME
+
+# Install NVIDIA SDK Manager and dependencies (Google Chrome)
+ARG CHROME_PACKAGE_NAME="google-chrome-stable_current_amd64.deb"
+ARG CHROME_PACKAGE_SRC_PATH="./$CHROME_PACKAGE_NAME"
+ARG CHROME_PACKAGE_TARGET_PATH="/$CHROME_PACKAGE_NAME"
+ARG SDK_MANAGER_VERSION="2.0.0-11402"
+ARG SDK_MANAGER_PACKAGE_NAME="sdkmanager_${SDK_MANAGER_VERSION}_amd64.deb"
+ARG SDK_MANAGER_PACKAGE_SRC_PATH="./$SDK_MANAGER_PACKAGE_NAME"
+ARG SDK_MANAGER_PACKAGE_TARGET_PATH="/$SDK_MANAGER_PACKAGE_NAME"
+ARG SDK_MANAGER_DEPS="iproute2 iptables"
+COPY $CHROME_PACKAGE_SRC_PATH $CHROME_PACKAGE_TARGET_PATH
+COPY $SDK_MANAGER_PACKAGE_SRC_PATH $SDK_MANAGER_PACKAGE_TARGET_PATH
+RUN apt update && apt install -y $CHROME_PACKAGE_TARGET_PATH $SDK_MANAGER_PACKAGE_TARGET_PATH $SDK_MANAGER_DEPS && rm -rf /var/lib/apt/lists/* $CHROME_PACKAGE_TARGET_PATH $SDK_MANAGER_PACKAGE_TARGET_PATH
+
+# Set environment
+WORKDIR $HOME
+USER $USERNAME
