@@ -2,7 +2,7 @@
 
 CONTAINER_USER="docker"
 
-ROOT_DIR="dockerfile_templates"
+ROOT_DIR="dockerfiles"
 PWD=$(pwd)
 REPOSITORY=${PWD#*"$ROOT_DIR/"}
 PLATFORM_OS="linux"
